@@ -1,6 +1,6 @@
 # ClassCache4Php #
 
-This class that allows to put in cache file a part of code or php file include.  
+This class allows to put in cache file a part of code or php file include.  
 This class provides methods to use simple cache for small project.
 
 

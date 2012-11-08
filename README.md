@@ -46,6 +46,32 @@ The method start() ask one parameter. This parameter is the name of the cache.
 	    $Cache->end();
 	?>
 
+### Use start() and end() methods when you need use serialization ###
+
+If you need to use serialization in your cache.  
+The method start() et end() allows to use a parameters to change the type of return.  
+If you set the type to true the method return the content and do not print.
+
+For the end() method you must set the name of cache so.
+  
+
+	<?php
+		// Start the cache 
+	    if(! $return = $Cache->start('demoCache', true)){
+	      
+	    	// long threatment
+	    	$soap = new SoapClient("https://www.ovh.com/soapi/soapi-re-1.49.wsdl");
+			$session = $soap->login('********', '**********',"fr", false);	
+
+			$result = $soap->domainList($session);
+			echo serialize($result);
+	    }
+
+	    // Stop the cache
+	    $return = $Cache->end('demoCache', true);
+
+	    print_r(unserialize($return));
+	?>
 
 ### Use method inc() ###
 

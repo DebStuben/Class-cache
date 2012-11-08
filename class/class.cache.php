@@ -2,8 +2,8 @@
 class Cache{
 
 	public $dirname;	// Directory for temporaries files
-	public $duration;   // Cache life duration in minute
-	public $buffer;		// Buffer for methods start and end
+	public $duration; // Cache life duration in minute
+	public $buffer;	// Buffer for methods start and end
 
 	/**
 	* Class initialisation
@@ -26,7 +26,7 @@ class Cache{
 	}
 
 	/**
-	* Method that allows to read content of cache 
+	* Method that allows to read content of cache
 	* @param string $cachename name of cache file
 	* @return return false is the cache is not find or if duration is expired, otherwise return string of content
 	**/
@@ -66,7 +66,7 @@ class Cache{
 	/**
 	* Method that allows to include one php file
 	* @param string $file file to include (with absolute path)
-	* @param string $cachename Name of cache file 
+	* @param string $cachename Name of cache file
 	* @return return true and show content with echo function
 	**/
 	public function inc($file, $cachename = null){
@@ -88,13 +88,18 @@ class Cache{
 	/**
 	* Start the buffer for capture script part and wait method end() to stop capture and show content
 	* @param string $cachename Name of cache file
-	* @return strinf of content 
+	* @param (optional) if set to true then the method does not 'echo' but returns the contents
+	* @return string of content
 	**/
-	public function start($cachename){
+	public function start($cachename, $type = false){
 		if($content = $this->read($cachename)){
-			echo $content;
 			$this->buffer = false;
-			return true;
+			if($type){
+				return $content;
+			}else{
+				echo $content;
+				return true;
+			}
 		}
 		ob_start();
 		$this->buffer = $cachename;
@@ -102,15 +107,26 @@ class Cache{
 
 	/**
 	* Stop the buffer and show content if not in cache when call method start()
-	* @return strinf of content 
+	* @param (optional) string Name of cache file
+	* @param (optional) if set to true then the method does not 'echo' but returns the contents
+	* @return echo of content
 	**/
-	public function end(){
+	public function end($cachename = null, $type = false){
 		if(!$this->buffer){
-			return false;
+			if($type){
+				return $this->read($cachename);
+			}else{
+				return false;
+			}
 		}
-		$content = ob_get_clean();
-		echo $content;
-		$this->write($this->buffer, $content);
-	}
 
+		$content = ob_get_clean();
+		$this->write($this->buffer, $content);
+
+		if($type){
+			return $content;
+		}else{
+			echo $content;
+		}
+	}
 }
